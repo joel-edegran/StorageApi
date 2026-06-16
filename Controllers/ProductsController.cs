@@ -58,6 +58,33 @@ public class ProductsController : ControllerBase
         return Ok(productDto);
     }
 
+    // GET: api/products/stats
+    [HttpGet("stats")]
+    public async Task<ActionResult<ProductStatsDto>> GetProductStats()
+    {
+        var products = await _context.Product.ToListAsync();
+
+        if (!products.Any())
+        {
+            return Ok(new ProductStatsDto
+            {
+                TotalProducts = 0,
+                TotalInventoryValue = 0,
+                AveragePrice = 0
+            });
+        }
+
+        var stats = new ProductStatsDto
+        {
+            TotalProducts = products.Sum(p => p.Count),
+            TotalInventoryValue = products.Sum(p => p.Price * p.Count),
+            AveragePrice = products.Average(p => p.Price)
+        };
+
+        return Ok(stats);
+    }
+
+
     // PUT: api/Product/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
