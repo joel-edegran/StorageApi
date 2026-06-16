@@ -16,7 +16,7 @@ public class ProductsController : ControllerBase
         _context = context;
     }
 
-    // GET: api/Product
+    // GET: api/products
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProductDto>>> GetProduct([FromQuery] string? category = null, [FromQuery] string? name = null)
     {
@@ -37,7 +37,7 @@ public class ProductsController : ControllerBase
 
         var products = await query.ToListAsync();
 
-        // Mappa från Product till ProductDto
+        // Map Product to ProductDto
         var productDtos = products.Select(p => new ProductDto
         {
             Id = p.Id,
@@ -50,7 +50,7 @@ public class ProductsController : ControllerBase
 
     }
 
-    // GET: api/Product/5
+    // GET: api/products/5
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
@@ -61,7 +61,7 @@ public class ProductsController : ControllerBase
             return NotFound();
         }
 
-        // Mappa ProductDto
+        // Map ProductDto
         var productDto = new ProductDto
         {
             Id = product.Id,
@@ -99,8 +99,7 @@ public class ProductsController : ControllerBase
         return Ok(stats);
     }
 
-
-    // PUT: api/Product/5
+    // PUT: api/products/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
     public async Task<IActionResult> PutProduct(int? id, Product product)
@@ -131,13 +130,13 @@ public class ProductsController : ControllerBase
         return NoContent();
     }
 
-    // POST: api/Product
+    // POST: api/products
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<ProductDto>> PostProduct(CreateProductDto createProductDto)
     {
-        // Validering via [Required] och [Range] i CreateProductDto
-        // hanteras automatiskt här tack vare [ApiController]-attributet på klassen.
+        // Validation via [Required] and [Range] in CreateProductDto
+        // is handled auto magically here thanks to the [ApiController] attribute.
 
         var product = new Product
         {
@@ -152,7 +151,7 @@ public class ProductsController : ControllerBase
         _context.Product.Add(product);
         await _context.SaveChangesAsync();
 
-        // Mappa upp till en ProductDto som returneras till klienten
+        // Map ProductDto to be sent to the client
         var productDto = new ProductDto
         {
             Id = product.Id,
@@ -164,7 +163,7 @@ public class ProductsController : ControllerBase
         return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, productDto);
     }
 
-    // DELETE: api/Product/5
+    // DELETE: api/products/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProduct(int? id)
     {
